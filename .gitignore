@@ -2,4 +2,4 @@
 /mysql/db/*
 /mysql/docker-entrypoint-initdb.d/*
 
-
+python/workdir/__pycache__/*
