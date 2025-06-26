@@ -1,16 +1,15 @@
-
 networks:
     covid-17:
         ipam:
             driver: default
             config:
-            - subnet: 172.30.0.0/24
+            - subnet: 172.31.0.0/24
 services:
     db:
         build: ./mysql
         networks:
             covid-17:
-                ipv4_address: '172.30.0.10'
+                ipv4_address: '172.31.0.10'
         ports:
             - 3306:3306
         volumes:
@@ -29,7 +28,7 @@ services:
        build: ./python
        networks:
            covid-17:
-              ipv4_address: '172.30.0.30'
+              ipv4_address: '172.31.0.30'
        ports:
             - 8080:8080
        container_name: webprog_py
