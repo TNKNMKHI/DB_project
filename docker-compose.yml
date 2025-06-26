@@ -9,7 +9,7 @@ services:
     db:
         build: ./mysql
         networks:
-            base:
+            covid-17:
                 ipv4_address: '172.30.0.10'
         ports:
             - 3306:3306
@@ -28,7 +28,7 @@ services:
        # restart: always
        build: ./python
        networks:
-           base:
+           covid-17:
               ipv4_address: '172.30.0.30'
        ports:
             - 8080:8080
