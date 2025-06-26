@@ -17,7 +17,7 @@ services:
             - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
         # user: mysql
         user: "1000:50"
-        container_name: webprog_db
+        container_name: covid_db
         environment:
             MYSQL_DATABASE: sampledb
             MYSQL_USER: dbuser
@@ -31,7 +31,7 @@ services:
               ipv4_address: '172.31.0.30'
        ports:
             - 8080:8080
-       container_name: webprog_py
+       container_name: covid_py
        volumes:
            - "./python/workdir:/workdir"
        environment:
