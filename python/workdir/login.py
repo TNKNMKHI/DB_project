@@ -1,6 +1,12 @@
 import streamlit as st
 
 def login_form():
+    """
+    ログインフォームを表示し、ユーザー認証を行う
+    Returns:
+        bool: ログイン成功ならTrue、失敗ならFalse
+    """
+    # テスト用のユーザー名とパスワードの辞書
     USER_CREDENTIALS = {
         "abeshinzo": "0708",
         "kagoike": "semi",
