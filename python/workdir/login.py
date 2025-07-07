@@ -67,8 +67,6 @@ def password_hash(password):
     # secretsモジュールを使ってランダムなソルトを生成
     salt = secrets.token_hex(16)
 
-    # 入力内容からユーザーのパスワードを取得
-    password = input("Enter your password: ")
 
     # ソルトとSHA-256アルゴリズムを使ってパスワードをハッシュ化
     hash_object = hashlib.sha256((password + salt).encode())
