@@ -1,5 +1,5 @@
 import streamlit as st
-from login import login_form
+from pages.login import login_form
 from pages.mypage import show_mypage
 from pages.report_stop import show_report_stop
 from pages.notice import show_notice 
@@ -14,7 +14,7 @@ def main():
     st.markdown(f"### Welcome, {UserName}!")
 
     # タブでページ切り替え
-    MenuList = ["お知らせ","マイページ", "出席停止生徒一覧"]
+    MenuList = ["お知らせ", "マイページ", "出席停止生徒一覧"]
     tab1, tab2,tab3 = st.tabs(MenuList)
     
     with tab1:

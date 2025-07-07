@@ -76,9 +76,9 @@ def password_hash(password):
     return hash_object , hash_hex , salt
 
 
-# # テスト用
-# if __name__ == "__main__":
-#     password = "testpassword"
-#     hash_object, hash_hex, salt = password_hash(password)
-#     print(f"Hash: {hash_hex}\nSalt: {salt}\nHash Object: {hash_object}")
+# テスト用
+if __name__ == "__main__":
+    password = ""
+    hash_object, hash_hex, salt = password_hash(password)
+    print(f"Hash: {hash_hex}\nSalt: {salt}\nHash Object: {hash_object}")
     
