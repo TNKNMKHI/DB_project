@@ -2,8 +2,11 @@ import streamlit as st
 from components.login import login_form
 from components.mypage import show_mypage
 from components.report_stop import show_report_stop
-from components.notice import show_notice 
-
+from components.notice import show_notice
+# 新しいコンポーネントをインポート
+from components.health_check import show_health_check
+from components.activity_log import show_activity_log
+from components.history import show_history
 
 def main():
     # ログインしてない場合はフォームのみを表示
@@ -11,20 +14,50 @@ def main():
         return # ログインしていない場合はここで終了
 
     UserName = st.session_state["username"]
+    # ログイン時に役割も取得する想定（仮で 'user' を設定）
+    if 'user_role' not in st.session_state:
+        st.session_state['user_role'] = 'user' # or 'admin'
+    
+    UserRole = st.session_state['user_role']
+
     st.markdown(f"### Welcome, {UserName}!")
 
-    # タブでページ切り替え
-    MenuList = ["お知らせ", "マイページ", "出席停止生徒一覧"]
-    tab1, tab2,tab3 = st.tabs(MenuList)
-    
-    with tab1:
-        show_notice()
+    # ユーザー種別で表示を切り替え
+    if UserRole == 'admin':
+        st.markdown("## 管理者ページ")
+        # 管理者メニュー
+        AdminMenuList = ["未入力者管理", "症状注意者管理", "出校停止者管理", "お知らせ投稿"]
+        admin_tab1, admin_tab2, admin_tab3, admin_tab4 = st.tabs(AdminMenuList)
+
+        with admin_tab1:
+            st.write("未入力者管理ページです") # ダミー
+        with admin_tab2:
+            st.write("症状注意者管理ページです") # ダミー
+        with admin_tab3:
+            show_report_stop() # 既存のものを流用
+        with admin_tab4:
+            st.write("お知らせ投稿ページです") # ダミー
+
+    else: # 一般ユーザー
+        # タブでページ切り替え
+        MenuList = ["マイページ", "体調入力", "行動入力", "出校停止報告", "履歴確認"]
+        tab1, tab2, tab3, tab4, tab5 = st.tabs(MenuList)
         
-    with tab2:
-        show_mypage(UserName)
+        with tab1:
+            show_mypage(UserName)
+            show_notice() # マイページ内にお知らせを表示
+            
+        with tab2:
+            show_health_check()
+            
+        with tab3:
+            show_activity_log()
+
+        with tab4:
+            show_report_stop()
         
-    with tab3:
-        show_report_stop()
+        with tab5:
+            show_history()
 
 
 if __name__ == "__main__":
