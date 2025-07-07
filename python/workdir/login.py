@@ -20,22 +20,31 @@ def login_form():
         st.session_state["logged_in"] = False
     if "username" not in st.session_state:
         st.session_state["username"] = ""
+    if "login_success" not in st.session_state:
+        st.session_state["login_success"] = False
 
     if not st.session_state["logged_in"]:
         st.title("ログインページ")
 
-        username = st.text_input("ユーザー名")
-        password = st.text_input("パスワード", type="password")
+        username = st.text_input("ユーザー名", key="login_username")
+        password = st.text_input("パスワード", type="password", key="login_password")
+        login_button = st.button("ログイン", key="login_button")
 
-        if st.button("ログイン"):
+        if login_button:
             if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
                 st.session_state["logged_in"] = True
                 st.session_state["username"] = username
-                st.success("ログイン成功！")
-                return True
+                st.session_state["login_success"] = True
+                st.rerun()
             else:
                 st.error("ユーザー名またはパスワードが間違っています。")
                 return False
+
+        if st.session_state["login_success"]:
+            st.success("ログイン成功！")
+            st.session_state["login_success"] = False
+
         return False
     else:
+        st.session_state["login_success"] = False
         return True
