@@ -39,24 +39,25 @@ def main():
 
     else: # 一般ユーザー
         # タブでページ切り替え
-        MenuList = ["マイページ", "体調入力", "行動入力", "出校停止報告", "履歴確認"]
-        tab1, tab2, tab3, tab4, tab5 = st.tabs(MenuList)
+        MenuList = ["お知らせ","マイページ", "体調入力", "行動入力", "出校停止報告", "履歴確認"]
+        tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(MenuList)
         
         with tab1:
-            show_mypage(UserName)
-            show_notice() # マイページ内にお知らせを表示
-            
+            show_notice()
+        
         with tab2:
-            show_health_check()
+            show_mypage(UserName)
             
         with tab3:
+            show_health_check()
+            
+        with tab4:
             show_activity_log()
             
-
-        with tab4:
+        with tab5:
             show_report_stop()
         
-        with tab5:
+        with tab6:
             show_history()
 
 
