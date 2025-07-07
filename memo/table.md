@@ -9,8 +9,21 @@
 |zipcode|VARCHAR(8)|--|郵便番号
 |prefecture|VARCHAR(4)|--|都道府県
 |city|VARCHAR(6)|--|市町村
-|address1|VARCHAR(10)||住所1
-|address2|VARCHAR(10)||住所2
+|address1|VARCHAR(20)|--|住所1
+|address2|VARCHAR(20)|--|住所2
+|tel|VARCHAR(15)|--|電話番号
+|delete_flag|BOOLEAN|default false|削除フラグ（0:有効, 1:削除済み）|
+|last_updated|DATETIME|--|最終更新日時|
+
+
+#### user_authテーブル
+|名前|型|属性|備考|
+|---|--|--|--|
+|user_id|int|primary key <br> auto increment| -- |
+|personcode|int|unique|personテーブルと紐付け|
+|username|VARCHAR(30)|unique|ログインID|
+|password_hash|VARCHAR(64)|--|ハッシュ化したパスワード|
+|role|VARCHAR(10)|--|権限（admin, student, teacherなど）|
 
 #### studentテーブル
 |名前|型|属性|備考|
@@ -35,9 +48,18 @@
 |officerrcode|int|--|職員コード
 |type|VARCHAR(5)|--|職員のタイプ
 
+
 #### 行動テーブル
 |名前|型|属性|備考|
 |---|--|--|--|
+|behaviorID|int|primary key <br> auto increment| -- |
+|personcode|int|--|外部用ID
 
+ #### 出席停止テーブル
+|名前|型|属性|備考|
+|---|--|--|--|
 
+#### 健康状態テーブル
+|名前|型|属性|備考|
+|---|--|--|--|
 
