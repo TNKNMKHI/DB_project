@@ -14,16 +14,15 @@ def main():
         return # ログインしていない場合はここで終了
 
     UserName = st.session_state["username"]
-    # ログイン時に役割も取得する想定（仮で 'user' を設定）
-    if 'user_role' not in st.session_state:
-        st.session_state['user_role'] = 'user' # or 'admin'
-    
-    UserRole = st.session_state['user_role']
+    is_admin = st.session_state.get("is_admin", False)  # is_adminフラグを取得
 
     st.markdown(f"### Welcome, {UserName}!")
+    
+    # for debug
+    # st.write("is admin : ",is_admin)
 
     # ユーザー種別で表示を切り替え
-    if UserRole == 'admin':
+    if is_admin:
         st.markdown("## 管理者ページ")
         # 管理者メニュー
         AdminMenuList = ["未入力者管理", "症状注意者管理", "出校停止者管理", "お知らせ投稿"]
@@ -52,6 +51,7 @@ def main():
             
         with tab3:
             show_activity_log()
+            
 
         with tab4:
             show_report_stop()

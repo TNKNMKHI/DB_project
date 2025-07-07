@@ -15,12 +15,15 @@ def login_form():
         "a": "a",
         "admin": "adminpass"
     }
+    ADMIN_USERS = {"admin"}  # 管理者ユーザーのセット
 
     # セッション初期化（初回のみ）
     if "logged_in" not in st.session_state:
         st.session_state["logged_in"] = False
     if "username" not in st.session_state:
         st.session_state["username"] = ""
+    if "is_admin" not in st.session_state:
+        st.session_state["is_admin"] = False
     if "login_success" not in st.session_state:
         st.session_state["login_success"] = False
 
@@ -39,6 +42,7 @@ def login_form():
                 st.session_state["logged_in"] = True
                 st.session_state["username"] = username
                 st.session_state["login_success"] = True
+                st.session_state["is_admin"] = username in ADMIN_USERS  # 管理者かどうかを判定
                 st.rerun()
             else:
                 st.error("ユーザー名またはパスワードが間違っています。")
