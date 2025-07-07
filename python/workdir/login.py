@@ -1,5 +1,6 @@
 import streamlit as st
 import hashlib # ハッシュ化のために必要
+import secrets # セキュリティのために必要
 
 def login_form():
     """
@@ -60,6 +61,27 @@ def password_hash(password):
     Args:
         password (str): ハッシュ化するパスワード
     Returns:
-        str: ハッシュ化されたパスワード
+        tuple: ハッシュオブジェクト、ハッシュの16進数値、ソルト
+
     """
-    return hashlib.sha256(password.encode()).hexdigest()
+    # secretsモジュールを使ってランダムなソルトを生成
+    salt = secrets.token_hex(16)
+
+    # 入力内容からユーザーのパスワードを取得
+    password = input("Enter your password: ")
+
+    # ソルトとSHA-256アルゴリズムを使ってパスワードをハッシュ化
+    hash_object = hashlib.sha256((password + salt).encode())
+
+    # ハッシュの16進数値を取得
+    hash_hex = hash_object.hexdigest()
+    
+    return hash_object , hash_hex , salt
+
+
+# # テスト用
+# if __name__ == "__main__":
+#     password = "testpassword"
+#     hash_object, hash_hex, salt = password_hash(password)
+#     print(f"Hash: {hash_hex}\nSalt: {salt}\nHash Object: {hash_object}")
+    
