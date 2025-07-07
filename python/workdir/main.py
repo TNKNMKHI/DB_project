@@ -1,6 +1,7 @@
 import streamlit as st
 from login import login_form
-from mypage import show_mypage
+from pages.mypage import show_mypage
+from pages.report_stop import show_report_stop
 
 
 def main():
@@ -8,15 +9,8 @@ def main():
     if login_form():
         UserName = st.session_state["username"]
         
-        tab1 , tab2 = st.tabs(["マイページ","出席停止"])
+        # ログイン後のページを表示
         
-        with tab1:
-            show_mypage(UserName)
-        
-        
-        with tab2:
-            
-
 
 
 
