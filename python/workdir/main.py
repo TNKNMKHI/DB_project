@@ -1,8 +1,8 @@
 import streamlit as st
-from pages.login import login_form
-from pages.mypage import show_mypage
-from pages.report_stop import show_report_stop
-from pages.notice import show_notice 
+from components.login import login_form
+from components.mypage import show_mypage
+from components.report_stop import show_report_stop
+from components.notice import show_notice 
 
 
 def main():
