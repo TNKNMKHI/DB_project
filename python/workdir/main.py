@@ -1,5 +1,6 @@
 import streamlit as st
 from login import login_form
+from mypage import show_mypage
 
 
 def main():
@@ -10,11 +11,11 @@ def main():
         tab1 , tab2 = st.tabs(["マイページ","出席停止"])
         
         with tab1:
-            st.subheader(f"{UserName}さんの情報")
+            show_mypage(UserName)
         
         
         with tab2:
-            st.subheader("出席停止の情報")
+            
 
 
 
