@@ -30,6 +30,9 @@ def login_form():
         password = st.text_input("パスワード", type="password", key="login_password")
         login_button = st.button("ログイン", key="login_button")
 
+        # パスワードをハッシュ化（オプション）
+        # password = password_hash(password)
+        
         if login_button:
             if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
                 st.session_state["logged_in"] = True
@@ -40,11 +43,23 @@ def login_form():
                 st.error("ユーザー名またはパスワードが間違っています。")
                 return False
 
-        if st.session_state["login_success"]:
-            st.success("ログイン成功！")
-            st.session_state["login_success"] = False
-
+        # ログインフォームを表示
         return False
+    
     else:
         st.session_state["login_success"] = False
         return True
+    
+
+
+
+
+def password_hash(password):
+    """
+    パスワードをハッシュ化する
+    Args:
+        password (str): ハッシュ化するパスワード
+    Returns:
+        str: ハッシュ化されたパスワード
+    """
+    return hashlib.sha256(password.encode()).hexdigest()
