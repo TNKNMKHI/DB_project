@@ -10,11 +10,15 @@ def main():
         return # ログインしていない場合はここで終了
 
     UserName = st.session_state["username"]
-
-    # ログイン後のページを表示
     st.write(f"Welcome, {UserName}!")
-        
 
+    # タブでページ切り替え
+    tab1, tab2 = st.tabs(["マイページ", "報告停止"])
+    
+    with tab1:
+        show_mypage(UserName)
+    with tab2:
+        show_report_stop()
 
 
 if __name__ == "__main__":
