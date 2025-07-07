@@ -1,4 +1,5 @@
 import streamlit as st
+import hashlib # ハッシュ化のために必要
 
 def login_form():
     """
