@@ -12,7 +12,7 @@ def login_form():
     USER_CREDENTIALS = {
         "abeshinzo": "0708",
         "kagoike": "semi",
-        "a": "a",
+        "a": "6e1b1b91798406e23771a1956c6f69055f7b5f70eede8e0358534d87591762df",
         "admin": "adminpass"
     }
     ADMIN_USERS = {"admin"}  # 管理者ユーザーのセット
@@ -82,7 +82,12 @@ def password_hash(password):
 
 # テスト用
 if __name__ == "__main__":
-    password = ""
+    
+    password = st.text_input("")
     hash_object, hash_hex, salt = password_hash(password)
+    st.write(f"Hash: {hash_hex}")
+    st.write(f"Salt: {salt}")
+    st.write(f"Hash Object: {hash_object}")
+    
     print(f"Hash: {hash_hex}\nSalt: {salt}\nHash Object: {hash_object}")
     
