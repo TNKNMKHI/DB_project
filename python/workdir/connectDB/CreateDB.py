@@ -1,38 +1,68 @@
-from python.workdir.connectDB.MyDatabase import my_open, my_query, my_close
+from MyDatabase import my_open, my_query, my_close
 import mysql.connector
-from DButil import create_database
-
+import hashlib
+import secrets
 
 # Data Source Nameのパラメータを辞書型変数で定義
 dsn = {
-    'host': '172.31.0.10',  # ホスト名(IPアドレス)
-    'port': '3306',        # mysqlの接続ポート番号
-    'user': 'root',      # dbアクセスするためのユーザid
-    'password': '1234',    # ユーザidに対応するパスワード
-    'database': 'sampledb' # オープンするデータベース名
+    'host': '172.31.0.10',
+    'port': '3306',
+    'user': 'root',
+    'password': '1234',
+    'database': 'sampledb'
 }
 
+def hash_password(password):
+    """新しいパスワードのハッシュとソルトを生成する"""
+    salt = secrets.token_hex(16)
+    hashed_password = hashlib.sha256((password + salt).encode()).hexdigest()
+    return hashed_password, salt
+
+def create_database(database_name: str):
+    """データベースの作成"""
+    dsn_for_creation = dsn.copy()
+    if 'database' in dsn_for_creation:
+        del dsn_for_creation['database']
+    
+    try:
+        dbcon = mysql.connector.connect(**dsn_for_creation)
+        cur = dbcon.cursor()
+        cur.execute(f"CREATE DATABASE IF NOT EXISTS {database_name} CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci")
+        print(f"Database '{database_name}' created or already exists.")
+    except mysql.connector.Error as err:
+        print(f"Failed to create database: {err}")
+    finally:
+        if 'dbcon' in locals() and dbcon.is_connected():
+            cur.close()
+            dbcon.close()
 
 def create_tables():
-    """
-    テーブルの作成
-    """
-    # テーブル作成の順番を考慮（参照されるテーブルを先に作成）
+    """テーブルの作成"""
+    # 既存のテーブルを一度削除して再作成（開発用）
+    # 本番環境ではこのDROP文は削除してください
     table_definitions = [
+        "DROP TABLE IF EXISTS physical_condition, action, suspension_control, user_auth, user;",
         """
         CREATE TABLE IF NOT EXISTS user (
             user_id INT PRIMARY KEY AUTO_INCREMENT,
-            personal_number VARCHAR(10),
+            personal_number VARCHAR(10) UNIQUE,
             affiliation VARCHAR(30),
             namae VARCHAR(30),
             phone_number VARCHAR(20),
             user_class VARCHAR(10),
             position VARCHAR(10),
             attendance_suspension BOOLEAN DEFAULT FALSE,
-            password_hash VARCHAR(255),
-            salt VARCHAR(32),
             delflag BOOLEAN DEFAULT FALSE,
             last_update DATETIME
+        )
+        """,
+        """
+        CREATE TABLE IF NOT EXISTS user_auth (
+            auth_id INT PRIMARY KEY AUTO_INCREMENT,
+            user_id INT UNIQUE,
+            password_hash VARCHAR(255) NOT NULL,
+            salt VARCHAR(32) NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
         )
         """,
         """
@@ -96,25 +126,74 @@ def create_tables():
         """
     ]
 
-    dbcon, cur = None, None
     try:
         dbcon, cur = my_open(**dsn)
         for table_sql in table_definitions:
-            table_name = table_sql.split("EXISTS ")[1].split(" (")[0].strip()
             try:
-                my_query(table_sql, cur)
-                print(f"Table '{table_name}' created or already exists.")
+                # 複数のSQL文が含まれている可能性があるので、multi=Trueで実行
+                for result in cur.execute(table_sql, multi=True):
+                    pass # 結果を消費
+                # テーブル名を取得して表示（簡易的な方法）
+                if "CREATE TABLE" in table_sql:
+                    table_name = table_sql.split("EXISTS ")[1].split(" (")[0].strip()
+                    print(f"Table '{table_name}' processed.")
             except mysql.connector.Error as err:
-                print(f"Failed to create table '{table_name}': {err}")
+                print(f"Failed to execute query: {err}")
 
         dbcon.commit()
     except Exception as e:
         print(f"An error occurred during table creation: {e}")
-        if dbcon:
+        if 'dbcon' in locals() and dbcon.is_connected():
             dbcon.rollback()
     finally:
-        if dbcon and cur:
+        if 'dbcon' in locals() and dbcon.is_connected():
             my_close(dbcon, cur)
+
+def insert_sample_user():
+    """サンプル管理者ユーザーの登録"""
+    try:
+        dbcon, cur = my_open(**dsn)
+        
+        # 既にadminユーザーが存在するか確認
+        cur.execute("SELECT user_id FROM user WHERE personal_number = 'admin'")
+        if cur.fetchone():
+            print("Sample user 'admin' already exists.")
+            return
+
+        # 1. userテーブルに管理者情報を登録
+        user_sql = """
+            INSERT INTO user (personal_number, namae, position, last_update)
+            VALUES (%s, %s, %s, NOW())
+        """
+        user_data = ('admin', '管理者', 'admin')
+        cur.execute(user_sql, user_data)
+        
+        # 登録したユーザーのIDを取得
+        user_id = cur.lastrowid
+        
+        # 2. パスワードをハッシュ化
+        password = "adminpass"
+        hashed_password, salt = hash_password(password)
+        
+        # 3. user_authテーブルにパスワード情報を登録
+        auth_sql = """
+            INSERT INTO user_auth (user_id, password_hash, salt)
+            VALUES (%s, %s, %s)
+        """
+        auth_data = (user_id, hashed_password, salt)
+        cur.execute(auth_sql, auth_data)
+        
+        dbcon.commit()
+        print("Sample user 'admin' with password 'adminpass' has been created.")
+        
+    except Exception as e:
+        print(f"An error occurred during sample user insertion: {e}")
+        if 'dbcon' in locals() and dbcon.is_connected():
+            dbcon.rollback()
+    finally:
+        if 'dbcon' in locals() and dbcon.is_connected():
+            my_close(dbcon, cur)
+
 
 if __name__ == "__main__":
     print("Step 1: Creating database...")
@@ -123,4 +202,7 @@ if __name__ == "__main__":
     print("\nStep 2: Creating tables...")
     create_tables()
     
-    print("\nDatabase and tables setup complete.")
+    print("\nStep 3: Inserting sample user...")
+    insert_sample_user()
+    
+    print("\nDatabase setup complete.")
