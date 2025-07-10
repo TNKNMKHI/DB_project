@@ -1,88 +1,73 @@
 import streamlit as st
-import hashlib # ハッシュ化のために必要
-import secrets # セキュリティのために必要
+import hashlib
+from connectDB.MyDatabase import my_open, my_close
 
+# --- データベース関連 ---
+dsn = {
+    'host': '172.31.0.10',
+    'port': '3306',
+    'user': 'root',
+    'password': '1234',
+    'database': 'sampledb'
+}
+
+def verify_password(password, hashed_password, salt):
+    """入力されたパスワードが保存されているハッシュと一致するか検証する"""
+    return hashed_password == hashlib.sha256((password + salt).encode()).hexdigest()
+
+def get_user_credentials(personal_number):
+    """データベースからユーザーの認証情報を取得する"""
+    sql = """
+        SELECT u.user_id, u.position, ua.password_hash, ua.salt
+        FROM user u
+        JOIN user_auth ua ON u.user_id = ua.user_id
+        WHERE u.personal_number = %s AND u.delflag = FALSE
+    """
+    dbcon, cur = None, None
+    try:
+        dbcon, cur = my_open(**dsn)
+        cur.execute(sql, (personal_number,))
+        return cur.fetchone()
+    except Exception as e:
+        st.error(f"データベース接続エラー: {e}")
+        return None
+    finally:
+        if dbcon:
+            my_close(dbcon, cur)
+
+# --- ログインフォーム ---
 def login_form():
-    """
-    ログインフォームを表示し、ユーザー認証を行う
-    Returns:
-        bool: ログイン成功ならTrue、失敗ならFalse
-    """
-    # テスト用のユーザー名とパスワードの辞書
-    USER_CREDENTIALS = {
-        "abeshinzo": "0708",
-        "kagoike": "semi",
-        "a": "a",
-        "admin": "adminpass"
-    }
-    ADMIN_USERS = {"admin"}  # 管理者ユーザーのセット
-
-    # セッション初期化（初回のみ）
+    """ログインフォームを表示し、ユーザー認証を行う"""
     if "logged_in" not in st.session_state:
         st.session_state["logged_in"] = False
-    if "username" not in st.session_state:
         st.session_state["username"] = ""
-    if "is_admin" not in st.session_state:
         st.session_state["is_admin"] = False
-    if "login_success" not in st.session_state:
-        st.session_state["login_success"] = False
 
     if not st.session_state["logged_in"]:
         st.title("ログインページ")
 
-        username = st.text_input("ユーザー名", key="login_username")
+        # personal_numberをログインIDとして使用
+        personal_number = st.text_input("個人番号", key="login_personal_number")
         password = st.text_input("パスワード", type="password", key="login_password")
         login_button = st.button("ログイン", key="login_button")
 
-        # パスワードをハッシュ化（オプション）
-        # password = password_hash(password)
-        
         if login_button:
-            if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
-                st.session_state["logged_in"] = True
-                st.session_state["username"] = username
-                st.session_state["login_success"] = True
-                st.session_state["is_admin"] = username in ADMIN_USERS  # 管理者かどうかを判定
-                st.rerun()
+            user_data = get_user_credentials(personal_number)
+            
+            if user_data:
+                user_id, position, hashed_password, salt = user_data
+                if verify_password(password, hashed_password, salt):
+                    st.session_state["logged_in"] = True
+                    st.session_state["username"] = personal_number
+                    st.session_state["is_admin"] = (position == 'admin')
+                    st.rerun()
+                else:
+                    st.error("個人番号またはパスワードが間違っています。")
             else:
-                st.error("ユーザー名またはパスワードが間違っています。")
-                return False
-
-        # ログインフォームを表示
+                st.error("個人番号またはパスワードが間違っています。")
         return False
-    
     else:
-        st.session_state["login_success"] = False
         return True
-    
 
-
-
-
-def password_hash(password):
-    """
-    パスワードをハッシュ化する
-    Args:
-        password (str): ハッシュ化するパスワード
-    Returns:
-        tuple: ハッシュオブジェクト、ハッシュの16進数値、ソルト
-
-    """
-    # secretsモジュールを使ってランダムなソルトを生成
-    salt = secrets.token_hex(16)
-
-    # ソルトとSHA-256アルゴリズムを使ってパスワードをハッシュ化
-    hash_object = hashlib.sha256((password + salt).encode())
-
-    # ハッシュの16進数値を取得
-    hash_hex = hash_object.hexdigest()
-    
-    return hash_object , hash_hex , salt
-
-
-# テスト用
 if __name__ == "__main__":
-    password = ""
-    hash_object, hash_hex, salt = password_hash(password)
-    print(f"Hash: {hash_hex}\nSalt: {salt}\nHash Object: {hash_object}")
-    
+    login_form()
