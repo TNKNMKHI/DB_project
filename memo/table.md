@@ -17,6 +17,16 @@
 | lastupdate            | DATETIME        | 最終更新日                 |
 
 ---
+## 🧑‍💼 `user_auth` テーブル（パスワード情報）
+| フィールド名           | 型             | 説明                       |
+|------------------------|----------------|----------------------------|
+auth_id            | INT            | 主キー／AUTO_INCREMENT     |
+personal_number           | INT            | 外部キー（user.personal_number）   | AUTO_INCREMENT PRIMARY KEY,UNIQUE
+password_hash       | VARCHAR(255)| NOT NULL,
+salt| VARCHAR(32)| NOT NULL,
+| last_update        | DATETIME       | 最終更新日                 |
+| delflag            | BOOLEAN        | 削除フラグ                 |
+---
 
 ## 🗺️ `action_record` テーブル（行動記録）
 

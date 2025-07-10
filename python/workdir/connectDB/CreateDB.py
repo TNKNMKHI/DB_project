@@ -41,89 +41,101 @@ def create_tables():
     # 既存のテーブルを一度削除して再作成（開発用）
     # 本番環境ではこのDROP文は削除してください
     table_definitions = [
-        "DROP TABLE IF EXISTS physical_condition, action, suspension_control, user_auth, user;",
-        """
+        # テーブルを削除（開発用）
+        "DROP TABLE IF EXISTS physical_condition, action_record, suspension_control, user_auth, user;",
+        # user テーブル
+        '''
         CREATE TABLE IF NOT EXISTS user (
-            user_id INT PRIMARY KEY AUTO_INCREMENT,
-            personal_number VARCHAR(10) UNIQUE,
-            affiliation VARCHAR(30),
-            namae VARCHAR(30),
+            user_id INT AUTO_INCREMENT NOT NULL,
+            personal_number VARCHAR(10) NOT NULL UNIQUE,
+            affiliation VARCHAR(30) NOT NULL,
+            namae VARCHAR(30) NOT NULL,
             phone_number VARCHAR(20),
-            user_class VARCHAR(10),
+            class VARCHAR(10),
             position VARCHAR(10),
             attendance_suspension BOOLEAN DEFAULT FALSE,
+            login_pass VARCHAR(20) UNIQUE,
             delflag BOOLEAN DEFAULT FALSE,
-            last_update DATETIME
+            lastupdate DATETIME,
+            PRIMARY KEY(user_id)
         )
-        """,
-        """
+        ''',
+        # user_auth テーブル
+        '''
         CREATE TABLE IF NOT EXISTS user_auth (
-            auth_id INT PRIMARY KEY AUTO_INCREMENT,
-            user_id INT UNIQUE,
+            auth_id INT AUTO_INCREMENT PRIMARY KEY,
+            personal_number VARCHAR(10),
             password_hash VARCHAR(255) NOT NULL,
             salt VARCHAR(32) NOT NULL,
-            FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
-        )
-        """,
-        """
-        CREATE TABLE IF NOT EXISTS suspension_control (
-            suspension_control_id INT PRIMARY KEY AUTO_INCREMENT,
-            user_id INT,
-            start_date DATE,
-            finish_date DATE,
-            remarks TEXT,
-            medical_institution_name VARCHAR(10),
-            attending_physician VARCHAR(20),
-            delflag BOOLEAN DEFAULT FALSE,
             last_update DATETIME,
-            FOREIGN KEY (user_id) REFERENCES user(user_id)
+            delflag BOOLEAN DEFAULT FALSE,
+            UNIQUE(personal_number),
+            FOREIGN KEY (personal_number) REFERENCES user(personal_number) ON DELETE CASCADE ON UPDATE CASCADE
         )
-        """,
-        """
-        CREATE TABLE IF NOT EXISTS action (
-            action_id INT PRIMARY KEY AUTO_INCREMENT,
-            user_id INT,
-            action_date DATE,
-            action_time TIME,
+        ''',
+        # action_record テーブル
+        '''
+        CREATE TABLE IF NOT EXISTS action_record (
+            action_record_id INT AUTO_INCREMENT NOT NULL,
+            personal_number VARCHAR(10),
+            action_record_date DATE,
+            action_record_time TIME,
             destination VARCHAR(50),
             transportation VARCHAR(50),
             departure VARCHAR(50),
             arrival VARCHAR(50),
-            companion BOOLEAN,
+            companion BOOLEAN DEFAULT FALSE,
             companion_relationship VARCHAR(50),
-            companion_count VARCHAR(50),
+            companion_count INT,
             companion_name VARCHAR(50),
             mask_usage VARCHAR(50),
             delflag BOOLEAN DEFAULT FALSE,
-            last_update DATETIME,
-            FOREIGN KEY (user_id) REFERENCES user(user_id)
+            latupdate DATETIME,
+            PRIMARY KEY(action_record_id),
+            FOREIGN KEY(personal_number) REFERENCES user(personal_number) ON DELETE CASCADE ON UPDATE CASCADE
         )
-        """,
-        """
+        ''',
+        # physical_condition テーブル
+        '''
         CREATE TABLE IF NOT EXISTS physical_condition (
-            physical_condition_id INT PRIMARY KEY AUTO_INCREMENT,
-            user_id INT,
+            physical_condition_id INT AUTO_INCREMENT NOT NULL,
+            personal_number VARCHAR(10),
             condition_date DATE,
             condition_time TIME,
             body_temperature FLOAT,
-            joint_muscle_pain BOOLEAN,
-            fatigue BOOLEAN,
-            headache BOOLEAN,
-            sore_throat BOOLEAN,
-            shortness_of_breath BOOLEAN,
-            cough_sneeze BOOLEAN,
-            nausea_vomiting BOOLEAN,
-            abdominal_pain_diarrhea BOOLEAN,
-            taste_disorder BOOLEAN,
-            smell_disorder BOOLEAN,
-            attendance_suspension BOOLEAN,
-            suspension_control_id INT,
+            joint_muscle_pain BOOLEAN DEFAULT FALSE,
+            fatigue BOOLEAN DEFAULT FALSE,
+            headache BOOLEAN DEFAULT FALSE,
+            sore_throat BOOLEAN DEFAULT FALSE,
+            shortness_of_breath BOOLEAN DEFAULT FALSE,
+            cough_sneeze BOOLEAN DEFAULT FALSE,
+            nausea_vomiting BOOLEAN DEFAULT FALSE,
+            abdominal_pain_diarrhea BOOLEAN DEFAULT FALSE,
+            taste_disorder BOOLEAN DEFAULT FALSE,
+            smell_disorder BOOLEAN DEFAULT FALSE,
+            attendance_suspension BOOLEAN DEFAULT FALSE,
             delflag BOOLEAN DEFAULT FALSE,
-            last_update DATETIME,
-            FOREIGN KEY (user_id) REFERENCES user(user_id),
-            FOREIGN KEY (suspension_control_id) REFERENCES suspension_control(suspension_control_id)
+            latupdate DATETIME,
+            PRIMARY KEY(physical_condition_id),
+            FOREIGN KEY(personal_number) REFERENCES user(personal_number) ON DELETE CASCADE ON UPDATE CASCADE
         )
-        """
+        ''',
+        # suspension_control テーブル
+        '''
+        CREATE TABLE IF NOT EXISTS suspension_control (
+            suspension_control_id INT AUTO_INCREMENT NOT NULL,
+            personal_number VARCHAR(10),
+            sc_start DATE,
+            sc_finish DATE,
+            remarks TEXT,
+            medical_institution_name VARCHAR(10),
+            attending_physician VARCHAR(20),
+            delflag BOOLEAN DEFAULT FALSE,
+            latupdate DATETIME,
+            PRIMARY KEY(suspension_control_id),
+            FOREIGN KEY(personal_number) REFERENCES user(personal_number) ON DELETE CASCADE ON UPDATE CASCADE
+        )
+        '''
     ]
 
     try:
