@@ -90,7 +90,7 @@ def create_tables():
             companion_name VARCHAR(50),
             mask_usage VARCHAR(50),
             delflag BOOLEAN DEFAULT FALSE,
-            lastpdate DATETIME,
+            lastupdate DATETIME,
             PRIMARY KEY(action_record_id),
             FOREIGN KEY(personal_number) REFERENCES user(personal_number) ON DELETE CASCADE ON UPDATE CASCADE
         )

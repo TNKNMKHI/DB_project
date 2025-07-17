@@ -1,4 +1,4 @@
-from python.workdir.connectDB.MyDatabase import my_open, my_query, my_close
+from connectDB.MyDatabase import my_open, my_query, my_close
 import mysql.connector
 
 def create_database(database_name: str):
