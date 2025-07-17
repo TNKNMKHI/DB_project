@@ -1,4 +1,4 @@
-﻿physical_condition_id,personal_number,condition_date,condition_time,body_temperature,joint_muscle_pain,fatigue,headache,sore_throat,shortness_of_breath,cough_sneeze,nausea_vomiting,abdominal_pain_diarrhea,taste_disorder,smell_disorder,attendance_suspension,delflag,latupdate
+﻿physical_condition_id,personal_number,condition_date,condition_time,body_temperature,joint_muscle_pain,fatigue,headache,sore_throat,shortness_of_breath,cough_sneeze,nausea_vomiting,abdominal_pain_diarrhea,taste_disorder,smell_disorder,attendance_suspension,delflag,lastupdate
 1,63545,2025-07-01,PM,37.6,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,2025-07-10 07:39:06
 2,63545,2025-07-02,PM,36.6,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,2025-07-10 07:39:06
 3,63545,2025-07-05,PM,37.9,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,2025-07-10 07:39:06

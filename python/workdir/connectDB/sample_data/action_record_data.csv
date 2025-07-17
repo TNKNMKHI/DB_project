@@ -1,4 +1,4 @@
-﻿action_record_id,personal_number,action_record_date,action_record_Time,aestination,transportation,departure,arrival,companion,companion_relationship,companion_count,companion_name,mask_usage,delflag,latupdate
+﻿action_record_id,personal_number,action_record_date,action_record_Time,aestination,transportation,departure,arrival,companion,companion_relationship,companion_count,companion_name,mask_usage,delflag,lastupdate
 1,63545,2025-07-01,12:35:00,コンビニ,バス,下諏訪町,下諏訪町,TRUE,,3,佐々木 千代,時々着用,FALSE,2025-07-10 07:38:42
 2,63545,2025-07-02,16:19:00,駅,自動車,諏訪市,諏訪市,FALSE,,0,,時々着用,FALSE,2025-07-10 07:38:42
 3,63545,2025-07-03,15:19:00,飲食店,自転車,下諏訪町,岡谷市,FALSE,,0,中村 加奈,時々着用,FALSE,2025-07-10 07:38:42

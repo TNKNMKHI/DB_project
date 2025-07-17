@@ -20,8 +20,8 @@ i=0  #レコード件数カウント
 #ファイルオープン
 df = pd.read_csv("./sample_data/suspension_control_data.csv", header=0)
 
-# CSVのヘッダーのtypoを修正
-df.rename(columns={'lastupdate': 'lastupdate'}, inplace=True)
+# # CSVのヘッダーのtypoを修正
+# df.rename(columns={'lastupdate': 'lastupdate'}, inplace=True)
 
 #1行ずつ処理
 for ind,rowdata in df.iterrows():
