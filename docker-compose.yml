@@ -31,7 +31,7 @@ services:
            covid-17:
               ipv4_address: '172.31.0.30'
        ports:
-            - 8080:8080
+            - 8501:8501
        container_name: covid_py
        volumes:
            - "./python/workdir:/workdir"
