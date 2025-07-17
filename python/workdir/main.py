@@ -45,7 +45,7 @@ def main():
             show_notice()
         
         with tab2:
-            show_mypage(UserName)
+            show_mypage(UserName, st.session_state["personal_number"])
             
         with tab3:
             show_health_check()
