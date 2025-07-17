@@ -22,11 +22,21 @@ df = pd.read_csv("./sample_data/physical_condition_data.csv", header=0)
 #1行ずつ処理
 for ind,rowdata in df.iterrows():
     
+    # condition_timeの値をAM/PMから時間に変換
+    conditon_time = ""
+    if rowdata.condition_time == "AM":
+        # ７時に設定
+        conditon_time = "07:00:00"
+    else:
+        # １３時に設定
+        conditon_time = "13:00:00"
+    
+    
     sqlstring = f"""
         INSERT INTO physical_condition
             (personal_number, condition_date, condition_time, body_temperature, joint_muscle_pain, fatigue, headache, sore_throat, shortness_of_breath, cough_sneeze, nausea_vomiting, abdominal_pain_diarrhea, taste_disorder, smell_disorder, attendance_suspension ,delflag, lastupdate)
         VALUES
-            ('{rowdata.personal_number}','{rowdata.condition_date}','{rowdata.condition_time}',{rowdata.body_temperature},{rowdata.joint_muscle_pain},{rowdata.fatigue},{rowdata.headache},{rowdata.sore_throat},{rowdata.shortness_of_breath},{rowdata.cough_sneeze},{rowdata.nausea_vomiting},{rowdata.abdominal_pain_diarrhea},{rowdata.taste_disorder},{rowdata.smell_disorder},{rowdata.attendance_suspension},{rowdata.delflag},'{dt_now}' )
+            ('{rowdata.personal_number}','{rowdata.condition_date}','{conditon_time}',{rowdata.body_temperature},{rowdata.joint_muscle_pain},{rowdata.fatigue},{rowdata.headache},{rowdata.sore_throat},{rowdata.shortness_of_breath},{rowdata.cough_sneeze},{rowdata.nausea_vomiting},{rowdata.abdominal_pain_diarrhea},{rowdata.taste_disorder},{rowdata.smell_disorder},{rowdata.attendance_suspension},{rowdata.delflag},'{dt_now}' )
     """
     #print( sqlstring )  #for debug
     my_query( sqlstring, cur )   #1レコード挿入

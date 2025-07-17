@@ -25,6 +25,8 @@ df = pd.read_csv("./sample_data/suspension_control_data.csv", header=0)
 
 #1行ずつ処理
 for ind,rowdata in df.iterrows():
+
+    print("処理中のレコード:", rowdata.personal_number)  #for debug
     
     sqlstring = f"""
         INSERT INTO suspension_control

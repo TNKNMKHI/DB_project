@@ -51,7 +51,7 @@ for ind,rowdata in df.iterrows():
     # user_authテーブルへのINSERT
     sqlstring_auth = f"""
         INSERT INTO user_auth
-            (personal_number, password_hash, salt, last_update, delflag)
+            (personal_number, password_hash, salt, lastupdate, delflag)
         VALUES
             ('{rowdata.personal_number}', '{hashed_password}', '{salt}', '{dt_now}', {rowdata.delflag})
     """
