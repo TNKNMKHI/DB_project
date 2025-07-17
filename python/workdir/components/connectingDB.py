@@ -1,6 +1,6 @@
-import SQLAlchemy
+import mysql.connector
 
-#Data Source Nameのパラメータを辞書型変数で定義
+# Data Source Nameのパラメータを辞書型変数で定義
 dsn = {
     'host': '172.31.0.10',
     'port': '3306',
@@ -9,21 +9,13 @@ dsn = {
     'database': 'sampledb'
 }
 
-def create_engine():
-    """SQLAlchemyのエンジンを作成して返す"""
-    # データベースの接続情報
-    connection_string = f"mysql+pymysql://{dsn['user']}:{dsn['password']}@{dsn['host']}:{dsn['port']}/{dsn['database']}"
-    
-    # データベースに接続
-    engine = SQLAlchemy.create_engine(connection_string, echo=True)
-    
-    return engine
-
-def execute_query(engine, query, params=None):
-    """SQLクエリを実行する"""
-    with engine.connect() as connection:
-        if params:
-            result = connection.execute(query, params)
-        else:
-            result = connection.execute(query)
-        return result.fetchall()
+def get_db_connection():
+    """データベース接続とカーソルを取得する"""
+    try:
+        dbcon = mysql.connector.connect(**dsn)
+        cur = dbcon.cursor(dictionary=True) # 結果を辞書型で受け取る
+        return dbcon, cur
+    except mysql.connector.Error as err:
+        # st.error(f"データベース接続エラー: {err}") # Streamlitコンポーネント内でのみ使用可能
+        print(f"データベース接続エラー: {err}") # コンソールへの出力
+        return None, None
