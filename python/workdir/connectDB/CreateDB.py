@@ -67,7 +67,7 @@ def create_tables():
             personal_number VARCHAR(10),
             password_hash VARCHAR(255) NOT NULL,
             salt VARCHAR(32) NOT NULL,
-            last_update DATETIME,
+            lastupdate DATETIME,
             delflag BOOLEAN DEFAULT FALSE,
             UNIQUE(personal_number),
             FOREIGN KEY (personal_number) REFERENCES user(personal_number) ON DELETE CASCADE ON UPDATE CASCADE
@@ -90,7 +90,7 @@ def create_tables():
             companion_name VARCHAR(50),
             mask_usage VARCHAR(50),
             delflag BOOLEAN DEFAULT FALSE,
-            latupdate DATETIME,
+            lastpdate DATETIME,
             PRIMARY KEY(action_record_id),
             FOREIGN KEY(personal_number) REFERENCES user(personal_number) ON DELETE CASCADE ON UPDATE CASCADE
         )
@@ -115,7 +115,7 @@ def create_tables():
             smell_disorder BOOLEAN DEFAULT FALSE,
             attendance_suspension BOOLEAN DEFAULT FALSE,
             delflag BOOLEAN DEFAULT FALSE,
-            latupdate DATETIME,
+            lastupdate DATETIME,
             PRIMARY KEY(physical_condition_id),
             FOREIGN KEY(personal_number) REFERENCES user(personal_number) ON DELETE CASCADE ON UPDATE CASCADE
         )
@@ -131,7 +131,7 @@ def create_tables():
             medical_institution_name VARCHAR(10),
             attending_physician VARCHAR(20),
             delflag BOOLEAN DEFAULT FALSE,
-            latupdate DATETIME,
+            lastupdate DATETIME,
             PRIMARY KEY(suspension_control_id),
             FOREIGN KEY(personal_number) REFERENCES user(personal_number) ON DELETE CASCADE ON UPDATE CASCADE
         )
