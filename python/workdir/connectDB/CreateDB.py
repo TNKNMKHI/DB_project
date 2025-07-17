@@ -41,6 +41,7 @@ def create_tables():
     # 既存のテーブルを一度削除して再作成（開発用）
     # 本番環境ではこのDROP文は削除してください
     table_definitions = [
+                         
         # テーブルを削除（開発用）
         "DROP TABLE IF EXISTS physical_condition, action_record, suspension_control, user_auth, user;",
         # user テーブル
@@ -51,10 +52,9 @@ def create_tables():
             affiliation VARCHAR(30) NOT NULL,
             namae VARCHAR(30) NOT NULL,
             phone_number VARCHAR(20),
-            class VARCHAR(10),
+            user_class VARCHAR(10),
             position VARCHAR(10),
             attendance_suspension BOOLEAN DEFAULT FALSE,
-            login_pass VARCHAR(20) UNIQUE,
             delflag BOOLEAN DEFAULT FALSE,
             lastupdate DATETIME,
             PRIMARY KEY(user_id)
@@ -142,9 +142,8 @@ def create_tables():
         dbcon, cur = my_open(**dsn)
         for table_sql in table_definitions:
             try:
-                # 複数のSQL文が含まれている可能性があるので、multi=Trueで実行
-                for result in cur.execute(table_sql, multi=True):
-                    pass # 結果を消費
+                # SQL文を実行
+                cur.execute(table_sql)
                 # テーブル名を取得して表示（簡易的な方法）
                 if "CREATE TABLE" in table_sql:
                     table_name = table_sql.split("EXISTS ")[1].split(" (")[0].strip()
@@ -174,10 +173,10 @@ def insert_sample_user():
 
         # 1. userテーブルに管理者情報を登録
         user_sql = """
-            INSERT INTO user (personal_number, namae, position, last_update)
-            VALUES (%s, %s, %s, NOW())
+            INSERT INTO user (personal_number, namae, position,affiliation, lastupdate)
+            VALUES (%s, %s, %s,%s, NOW())
         """
-        user_data = ('admin', '管理者', 'admin')
+        user_data = ('admin', '管理者', 'admin', '管理部門')
         cur.execute(user_sql, user_data)
         
         # 登録したユーザーのIDを取得
@@ -189,10 +188,10 @@ def insert_sample_user():
         
         # 3. user_authテーブルにパスワード情報を登録
         auth_sql = """
-            INSERT INTO user_auth (user_id, password_hash, salt)
-            VALUES (%s, %s, %s)
+            INSERT INTO user_auth (personal_number, password_hash, salt, last_update)
+            VALUES (%s, %s, %s, NOW())
         """
-        auth_data = (user_id, hashed_password, salt)
+        auth_data = ('admin', hashed_password, salt)
         cur.execute(auth_sql, auth_data)
         
         dbcon.commit()

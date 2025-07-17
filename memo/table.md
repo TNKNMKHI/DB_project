@@ -9,10 +9,9 @@
 | affiliation           | VARCHAR(30)     | 学科・部課室               |
 | namae                 | VARCHAR(30)     | 氏名                       |
 | phone_number          | VARCHAR(20)     | 電話番号                   |
-| class                 | VARCHAR(10)     | 所属（学生・教員など）     |
+| user_class                 | VARCHAR(10)     | 所属（学生・教員など）     |
 | position              | VARCHAR(10)     | 役職                       |
 | attendance_suspension | BOOLEAN         | 出席停止フラグ             |
-| login_pass            | VARCHAR(20)     | ログインパスワード（UNIQUE）|
 | delflag               | BOOLEAN         | 削除フラグ                 |
 | lastupdate            | DATETIME        | 最終更新日                 |
 
