@@ -28,7 +28,7 @@ for ind,rowdata in df.iterrows():
 
     sqlstring = f"""
         INSERT INTO action_record
-            (personal_number, action_record_date, action_record_time, destination, transportation, departure, arrival, companion, companion_relationship, companion_count, companion_name, mask_usage, delflag, latupdate)
+            (personal_number, action_record_date, action_record_time, destination, transportation, departure, arrival, companion, companion_relationship, companion_count, companion_name, mask_usage, delflag, lastupdate)
         VALUES
             ('{rowdata.personal_number}','{rowdata.action_record_date}','{rowdata.action_record_time}','{rowdata.destination}','{rowdata.transportation}','{rowdata.departure}','{rowdata.arrival}',{rowdata.companion},'{rowdata.companion_relationship}',{rowdata.companion_count},'{rowdata.companion_name}','{rowdata.mask_usage}',{rowdata.delflag},'{dt_now}' )
     """

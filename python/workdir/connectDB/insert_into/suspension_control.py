@@ -21,14 +21,14 @@ i=0  #レコード件数カウント
 df = pd.read_csv("./sample_data/suspension_control_data.csv", header=0)
 
 # CSVのヘッダーのtypoを修正
-df.rename(columns={'lastupdate': 'latupdate'}, inplace=True)
+df.rename(columns={'lastupdate': 'lastupdate'}, inplace=True)
 
 #1行ずつ処理
 for ind,rowdata in df.iterrows():
     
     sqlstring = f"""
         INSERT INTO suspension_control
-            (personal_number, sc_start, sc_finish, remarks, medical_institution_name, attending_physician, delflag, latupdate)
+            (personal_number, sc_start, sc_finish, remarks, medical_institution_name, attending_physician, delflag, lastupdate)
         VALUES
             ('{rowdata.personal_number}','{rowdata.sc_start}','{rowdata.sc_finish}','{rowdata.remarks}','{rowdata.medical_institution_name}','{rowdata.attending_physician}',{rowdata.delflag},'{dt_now}' )
     """

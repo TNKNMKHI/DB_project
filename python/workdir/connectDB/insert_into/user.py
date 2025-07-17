@@ -29,7 +29,7 @@ i=0  #レコード件数カウント
 df = pd.read_csv("./sample_data/user_data.csv", header=0)
 
 # CSVのヘッダーのtypoを修正
-df.rename(columns={'lastupdate': 'latupdate'}, inplace=True)
+df.rename(columns={'lastupdate': 'lastupdate'}, inplace=True)
 
 #1行ずつ処理
 for ind,rowdata in df.iterrows():
@@ -39,7 +39,7 @@ for ind,rowdata in df.iterrows():
     # userテーブルへのINSERT
     sqlstring_user = f"""
         INSERT INTO user
-            (personal_number, affiliation, namae, phone_number, user_class, position, attendance_suspension, delflag, latupdate)
+            (personal_number, affiliation, namae, phone_number, user_class, position, attendance_suspension, delflag, lastupdate)
         VALUES
             ('{rowdata.personal_number}','{rowdata.affiliation}','{rowdata.namae}','{rowdata.phone_number}','{rowdata.user_class}','{rowdata.position}',{rowdata.attendance_suspension},{rowdata.delflag},'{dt_now}' )
     """
