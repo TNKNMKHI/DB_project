@@ -3,7 +3,6 @@ from components.login import login_form
 from components.mypage import show_mypage
 from components.report_stop import show_report_stop
 from components.notice import show_notice
-# 新しいコンポーネントをインポート
 from components.health_check import show_health_check
 from components.activity_log import show_activity_log
 from components.history import show_history
