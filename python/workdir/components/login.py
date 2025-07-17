@@ -1,6 +1,7 @@
 import streamlit as st
 import hashlib
 from connectDB.MyDatabase import my_open, my_close
+import secrets
 
 # --- データベース関連 ---
 dsn = {
@@ -13,14 +14,18 @@ dsn = {
 
 def verify_password(password, hashed_password, salt):
     """入力されたパスワードが保存されているハッシュと一致するか検証する"""
-    return hashed_password == hashlib.sha256((password + salt).encode()).hexdigest()
+    # DB登録時のハッシュ生成方法に合わせる
+    salt = secrets.token_hex(16)
+    hashed_password = hashlib.sha256((password + salt).encode()).hexdigest()
+    st.write(f"Verifying password: {password}, Hashed: {hashed_password}, Salt: {salt}")
+    return hashed_password
 
 def get_user_credentials(personal_number):
     """データベースからユーザーの認証情報を取得する"""
     sql = """
         SELECT u.user_id, u.position, ua.password_hash, ua.salt
         FROM user u
-        JOIN user_auth ua ON u.user_id = ua.user_id
+        JOIN user_auth ua ON u.personal_number = ua.personal_number
         WHERE u.personal_number = %s AND u.delflag = FALSE
     """
     dbcon, cur = None, None
@@ -63,8 +68,14 @@ def login_form():
                     st.rerun()
                 else:
                     st.error("個人番号またはパスワードが間違っています。")
+                    st.write("個人番号:", personal_number)  
+                    st.write("パスワード:", password)  # デバッグ用に表示（本番では削除すること）
+                    st.write(user_data)
             else:
                 st.error("個人番号またはパスワードが間違っています。")
+                st.write("個人番号:", personal_number)  
+                st.write("パスワード:", password)
+                st.write(user_data)
         return False
     else:
         return True
