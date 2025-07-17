@@ -11,6 +11,7 @@ Flask==3.1.1
 fonttools==4.58.4
 gitdb==4.0.12
 GitPython==3.1.44
+greenlet==3.2.3
 idna==3.10
 importlib_metadata==8.7.0
 importlib_resources==6.5.2
@@ -46,6 +47,7 @@ scipy==1.13.1
 seaborn==0.13.2
 six==1.17.0
 smmap==5.0.2
+SQLAlchemy==2.0.41
 streamlit==1.46.1
 tenacity==9.1.2
 threadpoolctl==3.6.0
