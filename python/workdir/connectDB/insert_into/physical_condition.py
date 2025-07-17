@@ -5,11 +5,11 @@ import datetime
 
 #Data Source Nameのパラメータを辞書型変数で定義
 dsn = {
-    'host' : '172.30.0.10',  #ホスト名(IPアドレス)
-    'port' : '3306',        #mysqlの接続ポート番号
-    'user' : 'root',      #dbアクセスするためのユーザid
-    'password' : '1234',    #ユーザidに対応するパスワード
-    'database' : 'dbrongp' #オープンするデータベース名
+    'host': '172.31.0.10',
+    'port': '3306',
+    'user': 'root',
+    'password': '1234',
+    'database': 'sampledb'
 }
 dbcon,cur = my_open( **dsn )
 

@@ -188,7 +188,7 @@ def insert_sample_user():
         
         # 3. user_authテーブルにパスワード情報を登録
         auth_sql = """
-            INSERT INTO user_auth (personal_number, password_hash, salt, last_update)
+            INSERT INTO user_auth (personal_number, password_hash, salt, lastupdate)
             VALUES (%s, %s, %s, NOW())
         """
         auth_data = ('admin', hashed_password, salt)
