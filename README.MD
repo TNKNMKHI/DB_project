@@ -1,6 +1,9 @@
 ### gitのセットアップ
 設定する
 ```
+winget imstall git.git
+
+```
 git config --global user.name "username"
 git config --global user.email "e-mail"
 ```
