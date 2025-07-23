@@ -64,18 +64,19 @@ def login_form():
                 if verify_password(password, hashed_password, salt):
                     st.session_state["logged_in"] = True
                     st.session_state["username"] = personal_number
+                    st.session_state["personal_number"] = personal_number
                     st.session_state["is_admin"] = (position == 'admin')
                     st.rerun()
                 else:
                     st.error("個人番号またはパスワードが間違っています。")
-                    st.write("個人番号:", personal_number)  
-                    st.write("パスワード:", password)  # デバッグ用に表示（本番では削除すること）
+                    # st.write("個人番号:", personal_number)  
+                    # st.write("パスワード:", password)  # デバッグ用に表示（本番では削除すること）
                     st.write(user_data)
             else:
                 st.error("個人番号またはパスワードが間違っています。")
-                st.write("個人番号:", personal_number)  
-                st.write("パスワード:", password)
-                st.write(user_data)
+                # st.write("個人番号:", personal_number)  
+                # st.write("パスワード:", password)
+                # st.write(user_data)
         return False
     else:
         return True

@@ -6,7 +6,8 @@ from connectDB.MyDatabase import my_open, my_close
 def show_health_check():
     st.header("体調入力")
 
-    if "personal_number" not in st.session_state or not st.session_state.get("logged_in"):
+    # ログインしているか確認
+    if "username" not in st.session_state or not st.session_state["logged_in"]:
         st.warning("このページを表示するにはログインが必要です。")
         return
 
